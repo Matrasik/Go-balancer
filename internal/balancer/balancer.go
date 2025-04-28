@@ -40,11 +40,25 @@ func (pool *BackedPool) HealthCheck(interval time.Duration) {
 				resp, err := http.Get(b.UrlString + "/health")
 				alive := err == nil && resp.StatusCode == 200
 				if !alive {
-					log.Printf("Server Id:%d Url:%s unreachable", elem.Id, elem.UrlString)
+					log.Printf("[Health] Server Id:%d Url:%s unreachable", elem.Id, elem.UrlString)
 				}
 				b.SetAlive(alive)
 			}(elem)
 		}
 		pool.mu.Unlock()
+	}
+}
+
+func (pool *BackedPool) InitCheck() {
+	for _, elem := range pool.BackendsInfo {
+		elem := elem
+		go func(b *BackendServerInfo) {
+			resp, err := http.Get(b.UrlString + "/health")
+			alive := err == nil && resp.StatusCode == 200
+			if !alive {
+				log.Printf("[Health] Server Id:%d Url:%s unreachable", elem.Id, elem.UrlString)
+			}
+			b.SetAlive(alive)
+		}(elem)
 	}
 }
