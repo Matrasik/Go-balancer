@@ -1,0 +1,45 @@
+{
+  "port":":8080",
+  "backends": [
+      {
+        "id": 1,
+        "address": "http://localhost:8081"
+      },
+      {
+        "id": 2,
+        "address": "http://localhost:8082"
+      },
+    {
+      "id": 3,
+      "address": "http://localhost:8083"
+    },
+    {
+      "id": 4,
+      "address": "http://localhost:8084"
+    },
+    {
+      "id": 5,
+      "address": "http://localhost:8085"
+    },
+    {
+      "id": 6,
+      "address": "http://localhost:8086"
+    },
+    {
+      "id": 7,
+      "address": "http://localhost:8087"
+    },
+    {
+      "id": 8,
+      "address": "http://localhost:8088"
+    },
+    {
+      "id": 9,
+      "address": "http://localhost:8089"
+    },
+    {
+      "id": 10,
+      "address": "http://localhost:8090"
+    }
+  ]
+}
