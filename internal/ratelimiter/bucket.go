@@ -29,6 +29,7 @@ func (tb *TokenBucket) Allow() bool {
 	tb.mu.Lock()
 	defer tb.mu.Unlock()
 	now := time.Now().UnixNano()
+	//log.Printf("Tokens on client is %d capacity: %d rate %d", tb.tokens, tb.capacity, tb.rate)
 	tb.refill(now)
 	if tb.tokens >= 1 {
 		tb.tokens--

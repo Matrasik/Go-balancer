@@ -12,6 +12,15 @@ type Config struct {
 	BackendsInfo []*balancer.BackendServerInfo `json:"backends"`
 }
 
+type ClientsCfg struct {
+	Clients []BucketConfigs `json:"clients"`
+}
+
+type BucketConfigs struct {
+	Addr         string `json:"addr"`
+	BucketConfig `json:"params"`
+}
+
 type BucketConfig struct {
 	Capacity int64 `json:"capacity"`
 	Rate     int64 `json:"rate"`
@@ -45,13 +54,13 @@ func LoadConfig(filename string) (*Config, error) {
 	return cfg, nil
 }
 
-func LoadBucketConfig(filename string) (*BucketConfig, error) {
+func LoadBucketConfig(filename string) (*ClientsCfg, error) {
 	file, err := os.Open(filename)
 	defer file.Close()
 	if err != nil {
 		return nil, err
 	}
-	bucketCfg := &BucketConfig{}
+	bucketCfg := &ClientsCfg{}
 	decoder := json.NewDecoder(file)
 	err = decoder.Decode(&bucketCfg)
 	if err != nil {

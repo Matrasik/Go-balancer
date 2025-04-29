@@ -26,19 +26,19 @@ func main() {
 		log.Printf("error load bucket config %s", err)
 	}
 
-	bm := &ratelimiter.BucketManager{Config: bucketCfg}
+	bm := ratelimiter.NewBucketManager(*bucketCfg)
 	mux := http.NewServeMux()
 	backendPool := &balancer.BackedPool{
 		BackendsInfo: cfg.BackendsInfo,
 	}
 	h := handler.Handler{Pool: backendPool}
-	mux.HandleFunc("/balancer", h.BalanceHandler)
-	logMux := middleware.LogMiddleware(mux)
-	bucketMux := bm.BucketMiddleware(logMux)
+	mux.HandleFunc("/", h.BalanceHandler)
+	bucketMux := bm.BucketMiddleware(mux)
+	logMux := middleware.LogMiddleware(bucketMux)
 
 	server := &http.Server{
 		Addr:         cfg.Port,
-		Handler:      bucketMux,
+		Handler:      logMux,
 		ReadTimeout:  3 * time.Second,
 		WriteTimeout: 3 * time.Second,
 	}

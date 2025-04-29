@@ -1,4 +1,18 @@
 {
-  "capacity": 10,
-  "rate" : 5
+  "clients": [
+    {
+      "addr": "127.0.0.1:55555",
+      "params": {
+        "capacity": 20,
+        "rate": 10
+      }
+    },
+    {
+      "addr": "127.0.0.1:55554",
+      "params": {
+        "capacity": 5,
+        "rate": 1
+      }
+    }
+  ]
 }

@@ -15,6 +15,7 @@ func (h *Handler) BalanceHandler(w http.ResponseWriter, r *http.Request) {
 	target, n := h.Pool.Next()
 	if target == nil {
 		http.Error(w, "All servers are dead D:", http.StatusServiceUnavailable)
+		log.Print("[Handler] All servers are dead!!!")
 		return
 	}
 	proxy := httputil.NewSingleHostReverseProxy(target)

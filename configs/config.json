@@ -3,19 +3,19 @@
   "backends": [
       {
         "id": 1,
-        "address": "http://localhost:8081"
+        "address": "http://127.0.0.1:8081"
       },
       {
         "id": 2,
-        "address": "http://localhost:8082"
+        "address": "http://127.0.0.1:8082"
       },
     {
       "id": 3,
-      "address": "http://localhost:8083"
+      "address": "http://127.0.0.1:8083"
     },
     {
       "id": 4,
-      "address": "http://localhost:8084"
+      "address": "http://127.0.0.1:8084"
     },
     {
       "id": 5,

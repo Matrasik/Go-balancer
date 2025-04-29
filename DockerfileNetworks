@@ -1,0 +1,16 @@
+FROM golang:1.23.3 AS builder2
+
+WORKDIR /testUtils
+
+COPY go.mod go.sum ./
+RUN go mod tidy
+
+COPY . .
+
+RUN CGO_ENABLED=0 GOOS=linux GOARCH=amd64 go build -o utils-app ./testUtils/main.go
+
+FROM alpine:latest
+WORKDIR /testUtils
+COPY --from=builder2 /testUtils/utils-app .
+EXPOSE 8081 8082 8083 8084 8085 8086 8087 8088 8089 8090
+CMD ["/testUtils/utils-app"]

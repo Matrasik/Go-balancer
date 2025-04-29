@@ -8,7 +8,7 @@ import (
 func LogMiddleware(next http.Handler) http.Handler {
 	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		defer func() {
-			log.Printf("Request from addr: %s", r.RemoteAddr)
+			log.Println("Request from addr: ", r.RemoteAddr)
 		}()
 		next.ServeHTTP(w, r)
 	})
