@@ -27,9 +27,9 @@ type BucketConfig struct {
 }
 
 type BucketDBConfig struct {
-	IP       string `gorm:"primaryKey;type:varchar(15)" json:"ip"`
-	Capacity int    `gorm:"not null" json:"capacity"`
-	Rate     int    `gorm:"not null" json:"rate"`
+	IP       string `gorm:"type:varchar(32);uniqueIndex;not null;primaryKey" json:"ip"`
+	Capacity int64  `gorm:"not null" json:"capacity"`
+	Rate     int64  `gorm:"not null" json:"rate"`
 }
 
 func LoadConfig(filename string) (*Config, error) {

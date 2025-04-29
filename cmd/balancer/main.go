@@ -25,8 +25,12 @@ func main() {
 	if err != nil {
 		log.Printf("error load bucket config %s", err)
 	}
+	dataBase, err := db.Connect()
+	if err != nil {
+		log.Fatalln("Failed connect to database")
+	}
 
-	bm := ratelimiter.NewBucketManager(*bucketCfg)
+	bm := ratelimiter.NewBucketManager(*bucketCfg, dataBase)
 	mux := http.NewServeMux()
 	backendPool := &balancer.BackedPool{
 		BackendsInfo: cfg.BackendsInfo,
@@ -46,10 +50,6 @@ func main() {
 	go backendPool.HealthCheck(5 * time.Second)
 	log.Printf("Starting server at %s", server.Addr)
 
-	dataBase, err := db.Connect()
-	if err != nil {
-		log.Fatalln("Failed connect to database")
-	}
 	migrations.Migrate(dataBase)
 	err = server.ListenAndServe()
 	if err != nil {

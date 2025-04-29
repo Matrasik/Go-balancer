@@ -24,24 +24,6 @@ services:
     environment:
       - DB_HOST=database
       - DB_PORT=5432
-  backend1:
-    build: ./testUtils/backend1
-    environment:
-      - PORT=8081
-    ports:
-      - 8081:8081
-  backend2:
-    build: ./testUtils/backend2
-    environment:
-      - PORT=8082
-    ports:
-      - 8082:8082
-  backend3:
-    build: ./testUtils/backend3
-    environment:
-      - PORT=8083
-    ports:
-      - 8083:8083
   test_utils:
     container_name: test_utils
     build:
