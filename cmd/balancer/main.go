@@ -2,6 +2,8 @@ package main
 
 import (
 	"Golang_balancer/api/handler"
+	"Golang_balancer/db"
+	"Golang_balancer/db/migrations"
 	"Golang_balancer/internal/balancer"
 	"Golang_balancer/internal/config"
 	"Golang_balancer/internal/middleware"
@@ -23,6 +25,7 @@ func main() {
 	if err != nil {
 		log.Printf("error load bucket config %s", err)
 	}
+
 	bm := &ratelimiter.BucketManager{Config: bucketCfg}
 	mux := http.NewServeMux()
 	backendPool := &balancer.BackedPool{
@@ -32,6 +35,7 @@ func main() {
 	mux.HandleFunc("/balancer", h.BalanceHandler)
 	logMux := middleware.LogMiddleware(mux)
 	bucketMux := bm.BucketMiddleware(logMux)
+
 	server := &http.Server{
 		Addr:         cfg.Port,
 		Handler:      bucketMux,
@@ -41,6 +45,12 @@ func main() {
 	go backendPool.InitCheck()
 	go backendPool.HealthCheck(5 * time.Second)
 	log.Printf("Starting server at %s", server.Addr)
+
+	dataBase, err := db.Connect()
+	if err != nil {
+		log.Fatalln("Failed connect to database")
+	}
+	migrations.Migrate(dataBase)
 	err = server.ListenAndServe()
 	if err != nil {
 		log.Printf("error start server %s", err)

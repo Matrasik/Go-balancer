@@ -17,6 +17,12 @@ type BucketConfig struct {
 	Rate     int64 `json:"rate"`
 }
 
+type BucketDBConfig struct {
+	IP       string `gorm:"primaryKey;type:varchar(15)" json:"ip"`
+	Capacity int    `gorm:"not null" json:"capacity"`
+	Rate     int    `gorm:"not null" json:"rate"`
+}
+
 func LoadConfig(filename string) (*Config, error) {
 	file, err := os.Open(filename)
 	defer file.Close()
