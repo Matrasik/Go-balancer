@@ -14,6 +14,7 @@ type BackedPool struct {
 	mu           sync.Mutex
 }
 
+// Смотрм текущий по номеру сервер. Если мертв - идем до первого живого.
 func (pool *BackedPool) Next() (addr *url.URL, id int) {
 	pool.mu.Lock()
 	defer pool.mu.Unlock()
@@ -29,6 +30,7 @@ func (pool *BackedPool) Next() (addr *url.URL, id int) {
 	return nil, -1
 }
 
+// Каждые interval секунд делаем пинг на по урлу /health. Ругаемся, если сервер не доступен
 func (pool *BackedPool) HealthCheck(interval time.Duration) {
 	ticker := time.NewTicker(interval)
 	defer ticker.Stop()
@@ -49,6 +51,7 @@ func (pool *BackedPool) HealthCheck(interval time.Duration) {
 	}
 }
 
+// Тот же HealthChek, но одноразовый
 func (pool *BackedPool) InitCheck() {
 	for _, elem := range pool.BackendsInfo {
 		elem := elem

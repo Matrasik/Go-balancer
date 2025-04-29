@@ -13,6 +13,7 @@ type TokenBucket struct {
 	mu         sync.Mutex
 }
 
+// Фиксируем текущее время и смотрим сколько прошло с последнего обращения. Если больше емкости, то ее и возвращаем
 func (tb *TokenBucket) refill(now int64) {
 	difference := now - tb.lastRefill
 	addTokens := (difference * tb.rate) / 1e9
@@ -25,11 +26,11 @@ func (tb *TokenBucket) refill(now int64) {
 	return
 }
 
+// Проверка хватает ли у нас токенов на запрос.
 func (tb *TokenBucket) Allow() bool {
 	tb.mu.Lock()
 	defer tb.mu.Unlock()
 	now := time.Now().UnixNano()
-	//log.Printf("Tokens on client is %d capacity: %d rate %d", tb.tokens, tb.capacity, tb.rate)
 	tb.refill(now)
 	if tb.tokens >= 1 {
 		tb.tokens--

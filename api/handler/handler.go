@@ -11,6 +11,7 @@ type Handler struct {
 	Pool *balancer.BackedPool
 }
 
+// Основной хендлер, получает адресс бекенд-сервера и его id. Если не смог получить адрес - все сервера упали.
 func (h *Handler) BalanceHandler(w http.ResponseWriter, r *http.Request) {
 	target, n := h.Pool.Next()
 	if target == nil {
@@ -20,7 +21,7 @@ func (h *Handler) BalanceHandler(w http.ResponseWriter, r *http.Request) {
 	}
 	proxy := httputil.NewSingleHostReverseProxy(target)
 	proxy.ErrorHandler = func(w http.ResponseWriter, r *http.Request, err error) {
-		h.Pool.BackendsInfo[n].SetAlive(false)
+		h.Pool.BackendsInfo[n].SetAlive(false) // Если нет коннекта - ставим серверу статус умер
 		log.Printf("Error connect to backend server at Url: %s err: %v ", target.String(), err)
 		http.Error(w, "Backend unreachable", http.StatusBadGateway)
 
